@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="8de550d7-1707-4853-a3c9-cdd0fb890ffd" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="a-first-exampleFlow" doc:id="efadbe54-48f6-454c-a56c-1e8c791dfbf0" >
+		<http:listener doc:name="Listener" doc:id="56d444cd-34a0-4654-a4bf-8a599c69c515" config-ref="HTTP_Listener_config" path="/hai"/>
+		<ee:transform doc:name="Transform Message" doc:id="ccaece9d-7d70-45ef-aa31-593af6c6dd88" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+lookup("flow1", "kishore")]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="21412f68-6155-4ae7-a868-6da05aa38e23" message="---- Request Recevied and Processed -----"/>
+	</flow>
+	<flow name="flow1" doc:id="5e221d21-ad90-47ee-b053-db45ea1c82df">
+		<ee:transform doc:name="Transform Message" doc:id="75d4773e-c410-4a1d-99ab-61b763d0f5a0">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+"Hello, " ++ payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
